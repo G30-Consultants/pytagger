@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-assert sys.version >= '3.8', "Requires Python v3.8 or above"
+assert sys.version_info >= (3,8), "Requires Python v3.8 or above"
 from distutils.core import setup, Extension
 
 setup(
