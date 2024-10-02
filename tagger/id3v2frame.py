@@ -84,7 +84,7 @@ class ID3v2BaseFrame:
         @param fid: frame id for creating a new frame
         """
 
-        if fid and not frame and fid not in self.supported.keys():
+        if fid and not frame and fid not in list(self.supported.keys()):
             raise ID3ParameterException("Unsupported ID3v2 Field: %s" % fid)
         elif fid and not frame:
             self.fid = fid
@@ -126,13 +126,13 @@ class ID3v2BaseFrame:
         raise ID3NotImplementedException("output")
 
     def parse_field(self):
-        if self.fid not in self.supported.keys():
+        if self.fid not in list(self.supported.keys()):
             raise ID3FrameException("Unsupported ID3v2 Field: %s" % self.fid)
         parser = self.supported[self.fid][0]
         eval('self.x_' + parser + '()')
 
     def output_field(self):
-        if self.fid not in self.supported.keys():
+        if self.fid not in list(self.supported.keys()):
             raise ID3FrameException("Unsupported ID3v2 Field: %s" % self.fid)
         parser = self.supported[self.fid][0]
         return eval('self.o_' + parser + '()')
@@ -147,7 +147,7 @@ class ID3v2BaseFrame:
 
         # sanitise input - convert to string repr
         try:
-            if type(encodings[toenc]) == types.StringType:
+            if type(encodings[toenc]) == bytes:
                 toenc = encodings[toenc]
         except KeyError:
             toenc = 'latin_1'
@@ -155,10 +155,10 @@ class ID3v2BaseFrame:
         outstring = ''
 
         # make sure string is of a type we understand
-        if type(s) not in [types.StringType, types.UnicodeType]:
-            s = unicode(s)
+        if type(s) not in [bytes, str]:
+            s = str(s)
 
-        if type(s) == types.StringType:
+        if type(s) == bytes:
             if  toenc == fromenc:
                 # don't need any conversion here
                 outstring = s
@@ -169,10 +169,10 @@ class ID3v2BaseFrame:
                     warn("o_string: frame conversion failed. leaving as is.")
                     outstring = s
         
-        elif type(s) == types.UnicodeType:
+        elif type(s) == str:
             try:
                 outstring = s.encode(toenc)
-            except UnicodeEncodeError, err:
+            except UnicodeEncodeError as err:
                 warn("o_string: frame conversion failed - leaving empty. %s" %\
                      err)
                 outstring = ''
@@ -507,7 +507,7 @@ class ID3v2_2_Frame(ID3v2BaseFrame):
         imgtype = self.mimetype
         if len(imgtype) != 3:
             #attempt conversion
-            if imgtype in ID3V2_2_FRAME_MIME_TYPE_TO_IMAGE_FORMAT.keys():
+            if imgtype in list(ID3V2_2_FRAME_MIME_TYPE_TO_IMAGE_FORMAT.keys()):
                 imgtype = ID3V2_2_FRAME_MIME_TYPE_TO_IMAGE_FORMAT[imgtype]
             else:
                 raise ID3FrameException("ID3v2.2 picture format must be three characters")
@@ -534,7 +534,7 @@ class ID3v2_2_Frame(ID3v2BaseFrame):
         if not imgtype:
             raise ID3FrameException("APIC extraction failed. Missing mimetype")
 
-        if imgtype not in ID3V2_2_FRAME_IMAGE_FORMAT_TO_MIME_TYPE.keys():
+        if imgtype not in list(ID3V2_2_FRAME_IMAGE_FORMAT_TO_MIME_TYPE.keys()):
             raise ID3FrameException("Unrecognised mime-type")            
         else:
             self.mimetype = ID3V2_2_FRAME_IMAGE_FORMAT_TO_MIME_TYPE[imgtype]
@@ -543,7 +543,7 @@ class ID3v2_2_Frame(ID3v2BaseFrame):
 
         # get picture description
         for i in range(len(imgtype) + 2, len(data) - 1):
-            print [data[i:i+3]]
+            print([data[i:i+3]])
             if data[i] == '\x00':
                 self.desc = data[len(imgtype)+2:i]
                 if data[i+1] == '\x00':
@@ -593,7 +593,7 @@ class ID3v2_3_Frame(ID3v2BaseFrame):
         status_word = 0
         if self.flags and self.status_flags:
             for flag, bit in self.status_flags:
-                if self.flags.has_key(flag):
+                if flag in self.flags:
                     status_word = status_word & (0x01 << bit)
         return status_word
 
@@ -602,7 +602,7 @@ class ID3v2_3_Frame(ID3v2BaseFrame):
         format_word = 0
         if self.flags and self.format_flags:
             for flag, bit in self.format_flags:
-                if self.flags.has_key(flag):
+                if flag in self.flags:
                     format_word = format_word & (0x01 << bit)
         return format_word      
             

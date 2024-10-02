@@ -68,7 +68,8 @@ class ID3v1(object):
         try:
             self.__f = open(filename, 'rb+')
             self.read_only = False
-        except IOError, (errno, strerr):
+        except IOError as xxx_todo_changeme:
+            (errno, strerr) = xxx_todo_changeme.args
             if errno == 13: # permission denied
                 self.__f = open(filename, 'rb')
                 self.read_only = True
@@ -147,17 +148,17 @@ class ID3v1(object):
         
 
     def __getattr__(self, name):
-        if self.__tag and self.__tag.has_key(name):
+        if self.__tag and name in self.__tag:
             return self.__tag[name]
         else:
-            raise AttributeError, "%s not found" % name
+            raise AttributeError("%s not found" % name)
 
     def __setattr__(self, name, value):
-        if self.__tag and self.__tag.has_key(name):
+        if self.__tag and name in self.__tag:
             if name == 'genre' and type(value) != types.IntValue:
-                raise TypeError, "genre should be an integer"
+                raise TypeError("genre should be an integer")
             if name == 'track' and type(value) != types.IntValue:
-                raise TypeError, "track should be an integer"
+                raise TypeError("track should be an integer")
             if name == 'year':
                 self.__tag[name] = str(value)[:4]
             self.__tag[name] = value

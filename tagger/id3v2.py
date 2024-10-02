@@ -68,7 +68,8 @@ class ID3v2:
         try:
           self.f = open(filename, 'rb+')
           self.read_only = False
-        except IOError, (errno, strerror):
+        except IOError as xxx_todo_changeme:
+            (errno, strerror) = xxx_todo_changeme.args
             if errno == 13: # permission denied
                 self.f = open(filename, 'rb')
                 self.read_only = True
@@ -224,7 +225,7 @@ class ID3v2:
             for flagname, bit in ID3V2_2_TAG_HEADER_FLAGS:
                 self.tag[flagname] = (flags >> bit) & 0x01
 
-        if self.tag.has_key("ext") and self.tag["ext"]:
+        if "ext" in self.tag and self.tag["ext"]:
             self.parse_ext_header()
     
         debug(self.tag)
@@ -293,7 +294,7 @@ class ID3v2:
                 break
 
         # do a sanity check on the size/padding
-        if not self.tag.has_key("padding"):
+        if "padding" not in self.tag:
             self.tag["padding"] = 0
             
         if self.tag["size"] != read + self.tag["padding"]:
@@ -359,7 +360,7 @@ class ID3v2:
     # ---------------------------------------------------------     
     def commit_to_file(self, filename):
         newf = open(filename, 'wb+')
-        framesstring = ''.join(map(lambda x: x.output(), self.frames))
+        framesstring = ''.join([x.output() for x in self.frames])
         footerstring = ''
         extstring = ''
         
@@ -401,13 +402,13 @@ class ID3v2:
             return False # give up if it's readonly - don't bother!
             
         # construct frames, footers and extensions
-        framesstring = ''.join(map(lambda x: x.output(), self.frames))
+        framesstring = ''.join([x.output() for x in self.frames])
         footerstring = ''
         extstring = ''
         
-        if self.tag.has_key("ext") and self.tag["ext"]:
+        if "ext" in self.tag and self.tag["ext"]:
             extstring = self.construct_ext_header()
-        if self.tag.has_key("footer") and self.tag["footer"]:
+        if "footer" in self.tag and self.tag["footer"]:
             footerstring = self.construct_footer()
 
         
