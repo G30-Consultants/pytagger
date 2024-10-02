@@ -1,3 +1,6 @@
+*pytagger v0.7 (2nd October 2024)
+      Converted the existing tagger module to Python 3, with a minimum of version 3.8
+      
 *pytagger v0.6 (?? ??? ????)
     - Add size check for when frame is truncated (thanks to Michael P. Cosby)
     - Disabled LINK tag that is unimplemented (thanks to Michael P. Cosby)

@@ -33,7 +33,7 @@ SOFTWARE, EVEN  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 __author__ = "Alastair Tse <alastair@tse.id.au>"
 __license = "BSD"
 __url__ = "http://www.liquidx.net/pytagger/"
-__version__ = "0.4"
+__version__ = "0.7"
 __copyright__ = "Copyright (c) 2005, Alastair Tse" 
 
 from .constants import *

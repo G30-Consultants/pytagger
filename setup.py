@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 import sys
-assert sys.version >= '2.3', "Requires Python v2.3 or above"
+assert sys.version >= '3.8', "Requires Python v3.8 or above"
 from distutils.core import setup, Extension
 
 setup(
     name = "pytagger",
-    version = "0.5",
+    version = "0.7",
     author = "Alastair Tse",
     author_email = "alastair@liquidx.net",
     url = "http://www.liquidx.net/pytagger/",
