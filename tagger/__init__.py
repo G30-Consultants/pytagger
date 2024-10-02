@@ -36,13 +36,13 @@ __url__ = "http://www.liquidx.net/pytagger/"
 __version__ = "0.4"
 __copyright__ = "Copyright (c) 2005, Alastair Tse" 
 
-from constants import *
-from debug import *
-from encoding import *
-from exceptions import *
-from utility import *
-from id3v2 import *
-from id3v1 import *
+from .constants import *
+from .debug import *
+from .encoding import *
+from .exceptions import *
+from .utility import *
+from .id3v2 import *
+from .id3v1 import *
 
 
 
