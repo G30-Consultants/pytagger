@@ -20,11 +20,17 @@ ID3V2_DATA_LEN = {'2.2': id3v2_2_get_size,
   
 def syncsafe(num, size):
   """ Given a number, sync safe it """
-  result = ''
+  result = None
   for i in range(0,size):
     x = (num >> (i*7)) & 0x7f
-    result = chr(x) + result
-  return result
+    binX = '{0:b}'.format(x)
+    print(f'syncsafe binx {type(binX)}')
+    if result == None:
+      result = binX
+    else:
+      result = binX.join(result)
+  print(f'syncsafe result {type(result)}')
+  return result.encode()
 
 def nosyncsafe(data):
   return struct.unpack('!I', data)[0]

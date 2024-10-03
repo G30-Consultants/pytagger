@@ -42,6 +42,8 @@ class ID3v2:
     @todo: parse/write ext header
 
     """
+    sys.stdin.reconfigure(encoding='utf-8')
+    sys.stdout.reconfigure(encoding='utf-8')
     f = None
     supported = ('2.2', '2.3', '2.4')
     
@@ -105,7 +107,7 @@ class ID3v2:
     # ---------------------------------------------------------
     def tag_exists(self):
         self.f.seek(0)
-        if self.f.read(3) == 'ID3':
+        if self.f.read(3) == b'ID3':
             return True
         return False
 
@@ -206,7 +208,7 @@ class ID3v2:
         self.frames = []
         id3, ver, flags, rawsize = struct.unpack("!3sHB4s", data)
         
-        if id3 != "ID3":
+        if id3 != b"ID3":
             raise ID3HeaderInvalidException("ID3v2 header not found")
 
         self.tag["size"] = unsyncsafe(rawsize)
@@ -332,7 +334,7 @@ class ID3v2:
         elif self.version == '2.2':
             flags = ID3V2_2_TAG_HEADER_FLAGS
 
-        bytestring = 'ID3'
+        bytestring = b'ID3'
         flagbyte = 0
         for flagname, bit in flags:
             flagbyte = flagbyte | ((self.tag[flagname] & 0x01) << bit)

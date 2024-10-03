@@ -5,16 +5,16 @@ from tagger import *
 import sys, os, fnmatch, pickle
 
 def print_debug(filename, msg):
-    print os.path.basename(filename), ':',  msg
+    print(os.path.basename(filename), ':',  msg)
 
 def do_id3(filename, verbose=1):
+    header=""
     try:
-        id3 = ID3v2(filename)
+        id3 = ID3v2(filename, version='2.3')
         if not id3.tag_exists():
             print_debug(filename, "Unable to find ID3v2 tag")
         else:
-            print_debug(filename, "Found ID3v2 tag ver: %.1f frames: %d" % \
-                (id3.version, len(id3.frames)))
+            print_debug(filename, f"Found ID3v2 tag ver:{id3.version} frames:{len(id3.frames)}")
 
             if verbose:
                 for frame in id3.frames:
@@ -27,7 +27,7 @@ def do_id3(filename, verbose=1):
             # commit changes to mp3 file (pretend mode)
             id3.commit(pretend=1)
         
-    except ID3Exception, e:
+    except ID3Exception as e:
         print_debug(filename, "ID3v2 exception: %s" % str(e))
         raise
 
@@ -40,7 +40,7 @@ def do_id3(filename, verbose=1):
             if verbose:
                 print_debug(filename, "song: %s" % str(id3.songname))
                 print_debug(filename, "artist: %s" % str(id3.artist))
-    except ID3Exception, e:
+    except ID3Exception as e:
         print_debug(filename, "ID3v1 exception: %s" % str(e))
 
 def do_recurse(filename):
@@ -55,6 +55,11 @@ def do_recurse(filename):
         #print "checking file:", filename
         do_id3(filename)
 
+
+# Main
+
+sys.stdin.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding='utf-8')
 try:
     do_recurse(sys.argv[1])
 finally:
